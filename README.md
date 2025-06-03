@@ -80,3 +80,22 @@ Converte arquivos de mídia para o formato desejado usando `ffmpeg`. Basta infor
 - Uma conexão ativa com a internet é essencial para downloads e atualizações.
 
 - O script utiliza pastas padrão para armazenar arquivos, sem opção de escolher diretórios personalizados.
+
+---
+
+## 🧾 Licença
+
+Este projeto é licenciado sob a licença `MIT`. Veja o arquivo [**LICENSE**](https://github.com/soarespaullo/PDFTools/blob/main/LICENSE) para mais detalhes.
+
+---
+
+## 👨‍💻 Autor
+
+Feito com ❤️ por [**Paulo Soares**](https://soarespaullo.github.io/) – `Pull Requests` são bem-vindos!
+
+- 📧 [**soarespaullo@proton.me**](mailto:soarespaullo@proton.me)
+
+- 💬 [**@soarespaullo**](https://t.me/soarespaullo) no Telegram
+
+- 💻 [**GitHub**](https://github.com/soarespaullo)
+
