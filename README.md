@@ -76,8 +76,6 @@ Converte arquivos de mídia para o formato desejado usando `ffmpeg`. Basta infor
 
 ## ⚠️ Observações
 
-- É necessário ter permissões sudo para instalações e atualizações.
-
 - Uma conexão ativa com a internet é essencial para downloads e atualizações.
 
 - O script utiliza pastas padrão para armazenar arquivos, sem opção de escolher diretórios personalizados.
