@@ -7,7 +7,7 @@
 # capas, playlists e conversão de arquivos.
 #
 # Autor: Paulo Soares
-# GitHub: https://github.com/soarespaullo/yt-tools
+# GitHub: https://github.com/soarespaullo/YT-Tools
 # Data: 03-06-2025
 #
 # Uso:
