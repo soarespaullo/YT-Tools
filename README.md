@@ -30,9 +30,10 @@
 
 1. Dê permissão de execução ao script:
 
-   ```bash
-   chmod +x yt-tools.sh
-   ```
+```bash
+chmod +x yt-tools.sh
+```
+
 2. Execute o script:
 
 ```bash
