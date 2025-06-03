@@ -1,5 +1,18 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+#
+# yt-tools - Script para baixar vídeos, músicas e playlists do YouTube
+#
+# Descrição:
+# Script interativo para download via yt-dlp, com suporte a metadados,
+# capas, playlists e conversão de arquivos.
+#
+# Autor: Paulo Soares
+# GitHub: https://github.com/soarespaullo/yt-tools
+# Data: 03-06-2025
+#
+# Uso:
+# ./yt-tools.sh
+#
 # Cores
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -48,17 +61,31 @@ atualizar_yt_dlp() {
 # Verifica se yt-dlp está instalado, se não instala
 if ! command -v yt-dlp &> /dev/null; then
     echo -e "${YELLOW}yt-dlp não encontrado. Instalando...${NC}"
-    sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
-    sudo chmod a+rx /usr/local/bin/yt-dlp
-    echo -e "${GREEN}yt-dlp instalado com sucesso!${NC}"
+    (
+      sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp > /dev/null 2>&1
+      sudo chmod a+rx /usr/local/bin/yt-dlp > /dev/null 2>&1
+    ) &
+    spinner $!
+    if command -v yt-dlp &> /dev/null; then
+        echo -e "\n${GREEN}yt-dlp instalado com sucesso!${NC}"
+    else
+        echo -e "\n${RED}Falha ao instalar yt-dlp. Verifique sua conexão e tente novamente.${NC}"
+    fi
 fi
 
 # Verifica se ffmpeg está instalado, se não instala
 if ! command -v ffmpeg &> /dev/null; then
     echo -e "${YELLOW}ffmpeg não encontrado. Instalando...${NC}"
-    sudo apt update
-    sudo apt install -y ffmpeg
-    echo -e "${GREEN}ffmpeg instalado com sucesso!${NC}"
+    (
+        sudo apt update > /dev/null 2>&1
+        sudo apt install -y ffmpeg > /dev/null 2>&1
+    ) &
+    spinner $!
+    if command -v ffmpeg &> /dev/null; then
+        echo -e "\n${GREEN}ffmpeg instalado com sucesso!${NC}"
+    else
+        echo -e "\n${RED}Falha ao instalar ffmpeg. Verifique sua conexão e repositórios.${NC}"
+    fi
 fi
 
 # Diretórios padrão e logs
