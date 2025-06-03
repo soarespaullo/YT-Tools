@@ -28,14 +28,14 @@ atualizar_yt_dlp() {
   YTDLP_PATH=$(command -v yt-dlp)
 
   if dpkg -S "$YTDLP_PATH" &> /dev/null; then
-    echo -e "${YELLOW}yt-dlp instalado via apt. Para atualizar, use:${NC}"
-    echo -e "${GREEN}sudo apt update && sudo apt install --only-upgrade yt-dlp${NC}"
-    echo -e "${YELLOW}Tentando atualizar via apt...${NC}"
-    sudo apt update && sudo apt install --only-upgrade -y yt-dlp
+    echo -e "${YELLOW}yt-dlp instalado via apt.${NC}"
+    echo -e "${YELLOW}Atualizando via apt... Aguarde.${NC}"
+    sudo apt update > /dev/null 2>&1
+    sudo apt install --only-upgrade -y yt-dlp > /dev/null 2>&1
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}yt-dlp atualizado com sucesso via apt!${NC}"
     else
-      echo -e "${RED}Falha ao atualizar via apt. Verifique sua conexão e repositórios.${NC}"
+      echo -e "${RED}Falha ao atualizar yt-dlp via apt. Verifique sua conexão e repositórios.${NC}"
     fi
   else
     echo -e "${YELLOW}yt-dlp não instalado via apt. Atualizando com yt-dlp -U...${NC}"
