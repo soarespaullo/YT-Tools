@@ -86,7 +86,7 @@ Converte arquivos de mídia para o formato desejado usando `ffmpeg`. Basta infor
 
 ## 🧾 Licença
 
-Este projeto é licenciado sob a licença `MIT`. Veja o arquivo [**LICENSE**](https://github.com/soarespaullo/PDFTools/blob/main/LICENSE) para mais detalhes.
+Este projeto é licenciado sob a licença `MIT`. Veja o arquivo [**LICENSE**](https://github.com/soarespaullo/YT-Tools/blob/main/LICENSE) para mais detalhes.
 
 ---
 
