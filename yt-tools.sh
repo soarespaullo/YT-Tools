@@ -30,11 +30,11 @@ spinner() {
         printf " [%c]  " "$spinstr"
         spinstr=$temp${spinstr%"$temp"}
         sleep $delay
-        printf "\b\b\b\b\b\b"
+        printf "\r      \r"
     done
 }
 
-# Função para atualizar yt-dlp tratando instalação via apt
+# Atualização do yt-dlp
 atualizar_yt_dlp() {
   echo -e "${YELLOW}Verificando modo de instalação do yt-dlp...${NC}"
 
@@ -43,8 +43,13 @@ atualizar_yt_dlp() {
   if dpkg -S "$YTDLP_PATH" &> /dev/null; then
     echo -e "${YELLOW}yt-dlp instalado via apt.${NC}"
     echo -e "${YELLOW}Atualizando via apt... Aguarde.${NC}"
+    
+    (
     sudo apt update > /dev/null 2>&1
     sudo apt install --only-upgrade -y yt-dlp > /dev/null 2>&1
+    ) &
+    spinner $!
+    
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}yt-dlp atualizado com sucesso via apt!${NC}"
     else
@@ -52,28 +57,67 @@ atualizar_yt_dlp() {
     fi
   else
     echo -e "${YELLOW}yt-dlp não instalado via apt. Atualizando com yt-dlp -U...${NC}"
-    yt-dlp -U
-  fi
+    
+    (
+      yt-dlp -U > /tmp/yt_update.log 2>&1 
+    ) &
+    spinner $!
+    
+    if grep -q 'yt-dlp is up to date' /tmp/yt_update.log; then
+      echo -e "${GREEN}yt-dlp já está atualizado!${NC}"
+    elif grep -q 'Updated yt-dlp' /tmp/yt_update.log; then
+      echo -e "${GREEN}yt-dlp atualizado com sucesso!${NC}"
+    else
+      echo -e "${RED}Falha na atualização do yt-dlp. Veja detalhes abaixo:${NC}"
+      cat /tmp/yt_update.log
+    fi
 
-  read -n 1 -s -r -p $'\nPressione qualquer tecla para voltar ao menu...'
+    rm -f /tmp/yt_update.log
+  fi
 }
 
-# Verifica se yt-dlp está instalado, se não instala
+# Remoção do yt-dlp
+remover_yt_dlp() {
+  echo -e "${YELLOW}Verificando como o yt-dlp foi instalado...${NC}"
+  YTDLP_PATH=$(command -v yt-dlp)
+
+  if [ -z "$YTDLP_PATH" ]; then
+    echo -e "${RED}yt-dlp não está instalado.${NC}"
+    return
+  fi
+
+  if dpkg -S "$YTDLP_PATH" &> /dev/null; then
+    echo -e "${YELLOW}yt-dlp foi instalado via apt. Removendo...${NC}"
+    (
+      sudo apt remove -y yt-dlp > /dev/null 2>&1
+    ) &
+    spinner $!
+    echo -e "${GREEN}yt-dlp removido via apt.${NC}"
+  elif [[ "$YTDLP_PATH" == "/usr/local/bin/yt-dlp" ]]; then
+    echo -e "${YELLOW}yt-dlp instalado manualmente. Removendo...${NC}"
+    (
+      sudo rm -f /usr/local/bin/yt-dlp > /dev/null 2>&1
+    ) &
+    spinner $!
+    echo -e "${GREEN}yt-dlp removido de /usr/local/bin.${NC}"
+  else
+    echo -e "${RED}Não foi possível determinar o método de instalação de yt-dlp.${NC}"
+    echo -e "${RED}Remova manualmente o binário em: $YTDLP_PATH${NC}"
+  fi
+}
+
+# Instala yt-dlp se necessário
 if ! command -v yt-dlp &> /dev/null; then
     echo -e "${YELLOW}yt-dlp não encontrado. Instalando...${NC}"
     (
-      sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp > /dev/null 2>&1
-      sudo chmod a+rx /usr/local/bin/yt-dlp > /dev/null 2>&1
+        sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp > /dev/null 2>&1
+        sudo chmod a+rx /usr/local/bin/yt-dlp > /dev/null 2>&1
     ) &
     spinner $!
-    if command -v yt-dlp &> /dev/null; then
-        echo -e "\n${GREEN}yt-dlp instalado com sucesso!${NC}"
-    else
-        echo -e "\n${RED}Falha ao instalar yt-dlp. Verifique sua conexão e tente novamente.${NC}"
-    fi
+    command -v yt-dlp &> /dev/null && echo -e "\n${GREEN}yt-dlp instalado com sucesso!${NC}" || echo -e "\n${RED}Falha ao instalar yt-dlp.${NC}"
 fi
 
-# Verifica se ffmpeg está instalado, se não instala
+# Instala ffmpeg se necessário
 if ! command -v ffmpeg &> /dev/null; then
     echo -e "${YELLOW}ffmpeg não encontrado. Instalando...${NC}"
     (
@@ -81,21 +125,14 @@ if ! command -v ffmpeg &> /dev/null; then
         sudo apt install -y ffmpeg > /dev/null 2>&1
     ) &
     spinner $!
-    if command -v ffmpeg &> /dev/null; then
-        echo -e "\n${GREEN}ffmpeg instalado com sucesso!${NC}"
-    else
-        echo -e "\n${RED}Falha ao instalar ffmpeg. Verifique sua conexão e repositórios.${NC}"
-    fi
+    command -v ffmpeg &> /dev/null && echo -e "\n${GREEN}ffmpeg instalado com sucesso!${NC}" || echo -e "\n${RED}Falha ao instalar ffmpeg.${NC}"
 fi
 
-# Diretórios padrão e logs
+# Diretórios
 MUSICAS_DIR="$HOME/Downloads/YT-Musicas"
 VIDEOS_DIR="$HOME/Downloads/YT-Videos"
 PLAYLIST_DIR="$HOME/Downloads/YT-Playlists"
-LOG_DIR="$HOME/Downloads/YT-Logs"
-mkdir -p "$MUSICAS_DIR" "$VIDEOS_DIR" "$PLAYLIST_DIR" "$LOG_DIR"
-
-DATA_ATUAL=$(date +%F)
+mkdir -p "$MUSICAS_DIR" "$VIDEOS_DIR" "$PLAYLIST_DIR"
 
 # Loop principal
 while true; do
@@ -116,58 +153,74 @@ while true; do
     echo "3) Baixar Playlist (MP3 com capa e metadados)"
     echo "4) Atualizar yt-dlp"
     echo "5) Converter arquivo de mídia"
-    echo "6) Sair"
-    echo -ne "${YELLOW}Digite sua opção [1-6]: ${NC}"
-    read opcao
+    echo "6) Remover yt-dlp"
+    echo "7) Sair"
+    echo -ne "${YELLOW}Digite sua opção [1-7]: ${NC}"
+    read -r opcao
 
     case $opcao in
         1)
-            read -p "Cole a URL do vídeo: " url
+            read -r -p "Cole a URL do vídeo: " url
+            if [[ -z "$url" ]]; then
+                echo -e "${RED}Nenhuma URL fornecida. Retornando ao menu...${NC}"
+                sleep 2
+                continue
+            fi
             echo -e "${YELLOW}Baixando música com capa e metadados...${NC}"
-            LOG_FILE="$LOG_DIR/musicas_$DATA_ATUAL.log"
             yt-dlp -x --audio-format mp3 \
                    --embed-thumbnail \
                    --add-metadata \
                    --metadata-from-title "%(artist)s - %(title)s" \
                    -o "%(artist)s - %(title)s.%(ext)s" \
-                   -P "$MUSICAS_DIR" "$url" >> "$LOG_FILE" 2>&1 &
+                   -P "$MUSICAS_DIR" "$url" > /dev/null 2>&1 &
             spinner $!
             echo -e "\n${GREEN}Música salva em: $MUSICAS_DIR${NC}"
             ;;
         2)
-            read -p "Cole a URL do vídeo: " url
+            read -r -p "Cole a URL do vídeo: " url
+            if [[ -z "$url" ]]; then
+                echo -e "${RED}Nenhuma URL fornecida. Retornando ao menu...${NC}"
+                sleep 2
+                continue
+            fi
             echo "Escolha a qualidade do vídeo:"
             echo "1) 1080p"
             echo "2) 720p"
             echo "3) 480p"
             echo -ne "${YELLOW}Sua escolha: ${NC}"
-            read qualidade
+            read -r qualidade
 
             case $qualidade in
                 1) formato="bestvideo[height<=1080][vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]" ;;
                 2) formato="bestvideo[height<=720][vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]" ;;
                 3) formato="bestvideo[height<=480][vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]" ;;
-                *) formato="best[ext=mp4]" ;;
+                *) 
+                    echo -e "${RED}Qualidade inválida, usando padrão (melhor disponível).${NC}"
+                    formato="bestvideo[height<=1080][vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]"
+                    ;;
             esac
 
             echo -e "${YELLOW}Baixando vídeo em mp4 na qualidade escolhida...${NC}"
-            LOG_FILE="$LOG_DIR/videos_$DATA_ATUAL.log"
             yt-dlp -f "$formato" --merge-output-format mp4 \
                    -o "%(title)s (%(resolution)s).%(ext)s" \
-                   -P "$VIDEOS_DIR" "$url" >> "$LOG_FILE" 2>&1 &
+                   -P "$VIDEOS_DIR" "$url" > /dev/null 2>&1 &
             spinner $!
             echo -e "\n${GREEN}Vídeo salvo em: $VIDEOS_DIR${NC}"
             ;;
         3)
-            read -p "Cole a URL da playlist: " url
-            echo -e "${YELLOW}Baixando playlist com capa e metadados...${NC}"
-            LOG_FILE="$LOG_DIR/playlists_$DATA_ATUAL.log"
+            read -r -p "Cole a URL da playlist: " url
+            if [[ -z "$url" ]]; then
+                echo -e "${RED}Nenhuma URL fornecida. Retornando ao menu...${NC}"
+                sleep 2
+                continue
+            fi
+                        echo -e "${YELLOW}Baixando playlist com capa e metadados...${NC}"
             yt-dlp -x --audio-format mp3 \
                    --embed-thumbnail \
                    --add-metadata \
                    --metadata-from-title "%(artist)s - %(title)s" \
                    -o "%(playlist_title)s - %(artist)s - %(title)s.%(ext)s" \
-                   -P "$PLAYLIST_DIR" "$url" >> "$LOG_FILE" 2>&1 &
+                   -P "$PLAYLIST_DIR" "$url" > /dev/null 2>&1 &
             spinner $!
             echo -e "\n${GREEN}Playlist salva em: $PLAYLIST_DIR${NC}"
             ;;
@@ -176,24 +229,22 @@ while true; do
             ;;
         5)
             read -e -p "Digite o caminho do arquivo para converter: " input_file
-
             if [[ ! -f "$input_file" ]]; then
                 echo -e "${RED}Arquivo não encontrado!${NC}"
                 sleep 2
                 continue
             fi
-
-            read -p "Digite o formato de saída (ex: mp3, wav, mkv, gif): " ext
-
+            read -r -p "Digite o formato de saída (ex: mp3, wav, mkv, gif): " ext
             output_file="${input_file%.*}_convert.$ext"
-            LOG_FILE="$LOG_DIR/conversoes_$DATA_ATUAL.log"
-
             echo -e "${YELLOW}Convertendo arquivo...${NC}"
-            ffmpeg -i "$input_file" "$output_file" >> "$LOG_FILE" 2>&1 &
+            ffmpeg -i "$input_file" "$output_file" > /dev/null 2>&1 &
             spinner $!
             echo -e "\n${GREEN}Arquivo convertido salvo em: $output_file${NC}"
             ;;
         6)
+            remover_yt_dlp
+            ;;
+        7)
             echo -e "${RED}Saindo... Até logo!${NC}"
             exit 0
             ;;
@@ -203,5 +254,5 @@ while true; do
             ;;
     esac
 
-    read -n 1 -s -r -p $'\nPressione qualquer tecla para continuar...'
+    read -n 1 -s -r -p $'\nPressione qualquer tecla para voltar ao menu...'
 done
