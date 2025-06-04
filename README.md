@@ -1,6 +1,6 @@
 # 🎥🎵 yt-tools
 
-**yt-tools** é um script Bash prático e intuitivo para baixar músicas, vídeos e playlists do YouTube com qualidade e facilidade. Além disso, permite converter arquivos de mídia e atualizar automaticamente o yt-dlp para garantir que você sempre tenha a versão mais recente!
+**yt-tools** é um script Bash prático e intuitivo para baixar músicas, vídeos e playlists do `YouTube` com qualidade e facilidade. Além disso, permite converter arquivos de mídia e atualizar automaticamente o `yt-dlp` para garantir que você sempre tenha a versão mais recente!
 
 ---
 
