@@ -22,7 +22,6 @@
 - Linux com Bash
 - `yt-dlp` (instalado/atualizado pelo script)
 - `ffmpeg` (instalado pelo script se necessário)
-- Acesso sudo para instalação e atualização de pacotes
 
 ---
 
@@ -64,11 +63,9 @@ chmod +x yt-tools.sh
 
 - `~/Downloads/YT-Playlists` — playlists baixadas
 
-- `~/Downloads/YT-Logs` — logs de operações
-
 ## 🔄 Atualização do yt-dlp
 
-O script detecta se o `yt-dlp` foi instalado via `apt` ou não e orienta/realiza a atualização correta para manter sua ferramenta sempre atuali
+O script detecta se o `yt-dlp` foi instalado via `apt` ou não e orienta/realiza a atualização correta para manter sua ferramenta sempre atualizada.
 
 ## 🎛️ Conversão de arquivos
 
