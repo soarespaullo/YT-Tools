@@ -41,17 +41,27 @@ chmod +x yt-tools.sh
 
 3. No menu interativo, escolha entre as opções:
 
-- 🎵 Baixar música (MP3)
+```bash
+██╗   ██╗████████╗████████╗ ██████╗  ██████╗ ██╗     ███████╗
+╚██╗ ██╔╝╚══██╔══╝╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝
+ ╚████╔╝    ██║█████╗██║   ██║   ██║██║   ██║██║     ███████╗
+  ╚██╔╝     ██║╚════╝██║   ██║   ██║██║   ██║██║     ╚════██║
+   ██║      ██║      ██║   ╚██████╔╝╚██████╔╝███████╗███████║
+   ╚═╝      ╚═╝      ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝
 
-- 🎬 Baixar vídeo (MP4)
+🎧 Script para baixar vídeos, músicas e playlists do YouTube!
 
-- 📜 Baixar playlist (MP3)
+Escolha uma opção:
+  1) 🎵 Baixar Música (MP3 com capa e metadados)
+  2) 🎬 Baixar Vídeo (Escolher qualidade e mp4)
+  3) 📂 Baixar Playlist (MP3 com capa e metadados)
+  4) 🔄 Atualizar yt-dlp
+  5) 🧪 Converter arquivo de mídia
+  6) ❌ Remover yt-dlp
+  7) 🚪 Sair
 
-- 🔄 Atualizar yt-dlp
-
-- 🔧 Converter arquivos de mídia
-
-- ❌ Sair
+Digite sua opção [1-7]: 
+```
 
 4. Siga as instruções para inserir URLs e escolher formatos/qualidades.
 
