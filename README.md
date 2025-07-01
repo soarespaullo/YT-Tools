@@ -6,9 +6,9 @@
 
 ## 🚀 Funcionalidades
 
-- 🎧 **Baixar músicas** em MP3 com capa e metadados embutidos.
-- 📹 **Baixar vídeos** em qualidade personalizada (1080p, 720p, 480p) sempre em MP4.
-- 📃 **Baixar playlists** completas em MP3 com capa e metadados.
+- 🎧 **Baixar músicas** em `MP3` com capa e metadados embutidos.
+- 📹 **Baixar vídeos** em qualidade personalizada (`1080p`, `720p`, `480p`) sempre em `MP4`.
+- 📃 **Baixar playlists** completas em `MP3` com capa e metadados.
 - 🔄 **Atualizar o yt-dlp** automaticamente, com suporte para instalações via `apt` ou direto.
 - 🔧 **Converter arquivos de mídia** (áudio e vídeo) para vários formatos usando `ffmpeg`.
 - ⏳ Spinner animado para indicar progresso durante operações em background.
