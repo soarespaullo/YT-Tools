@@ -145,16 +145,17 @@ while true; do
     echo "   ██║      ██║      ██║   ╚██████╔╝╚██████╔╝███████╗███████║"
     echo "   ╚═╝      ╚═╝      ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝"
     echo -e "${NC}"
-    echo -e "${YELLOW}Script para baixar vídeos, músicas e playlists do YouTube!${NC}\n"
+    echo -e "${YELLOW}🎧 yt-tools - Baixar vídeos, músicas e playlists do YouTube!${NC}\n"
+    
 
     echo -e "${GREEN}Escolha uma opção:${NC}"
-    echo "1) Baixar Música (MP3 com capa e metadados)"
-    echo "2) Baixar Vídeo (Escolher qualidade e mp4)"
-    echo "3) Baixar Playlist (MP3 com capa e metadados)"
-    echo "4) Atualizar yt-dlp"
-    echo "5) Converter arquivo de mídia"
-    echo "6) Remover yt-dlp"
-    echo "7) Sair"
+    echo "1) 🎵 Baixar Música (MP3 com capa e metadados)"
+    echo "2) 🎬 Baixar Vídeo (Escolher qualidade e mp4)"
+    echo "3) 📂 Baixar Playlist (MP3 com capa e metadados)"
+    echo "4) 🔄 Atualizar yt-dlp"
+    echo "5) 🧪 Converter arquivo de mídia"
+    echo "6) ❌ Remover yt-dlp"
+    echo "7) 🚪 Sair"
     echo -ne "${YELLOW}Digite sua opção [1-7]: ${NC}"
     read -r opcao
 
@@ -245,7 +246,7 @@ while true; do
             remover_yt_dlp
             ;;
         7)
-            echo -e "${RED}Saindo... Até logo!${NC}"
+            echo -e "${RED}Saindo... Até logo! 👋${NC}"
             exit 0
             ;;
         *)
